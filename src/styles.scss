@@ -1,4 +1,25 @@
-//@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+@import "app/themes/black-theme";
+@import "app/themes/default-theme";
+
+@import './app/app.component.scss-theme';
+
+@mixin custom-components-theme($theme) {
+  @include anms-app-component-theme($theme);
+}
+
+.default-theme {
+  @include angular-material-theme($anms-theme);
+  @include custom-components-theme($anms-theme);
+}
+
+.black-theme {
+  @include angular-material-theme($anms-black-theme);
+  @include custom-components-theme($anms-black-theme);
+}
 
 html, body {
   height: 100%;
