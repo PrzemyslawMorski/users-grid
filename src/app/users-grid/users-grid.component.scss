@@ -1,0 +1,12 @@
+:host {
+  width: 80vw;
+
+  min-width: 500px;
+  overflow-x: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 32px;
+}
