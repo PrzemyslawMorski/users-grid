@@ -6,7 +6,8 @@
     <mat-form-field>
       <mat-label>Search</mat-label>
       <input matInput [(ngModel)]="searchValue" (ngModelChange)="applyFilter($event)">
-      <button mat-button *ngIf="searchValue" matSuffix mat-icon-button aria-label="Clear" (click)="searchValue=''; applyFilter('')">
+      <button mat-button *ngIf="searchValue" matSuffix mat-icon-button aria-label="Clear"
+              (click)="searchValue=''; applyFilter('')">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>

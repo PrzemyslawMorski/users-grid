@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-users-grid',
@@ -47,8 +48,9 @@ export class UsersGridComponent implements AfterViewInit {
     this.dialog.open(CreateUserComponent).afterClosed().subscribe(user => {
       if (user) {
         this.usersDataSource.data.push(user);
-        this.table.renderRows();
-        this.changeDetectorRef.detectChanges();
+
+        // TODO reassigning the table source is a bad and temporary
+        this.usersDataSource.data = _.clone(this.usersDataSource.data);
         this.snackBar.open('Successfully created a user');
       }
     });
@@ -57,19 +59,19 @@ export class UsersGridComponent implements AfterViewInit {
   editUser(user: UserModel): void {
     this.dialog.open(EditUserComponent, { data: user }).afterClosed().subscribe(result => {
       if (result) {
-        user = { ...result, id: user.id };
-        this.table.renderRows();
-        this.changeDetectorRef.detectChanges();
+        const indexOfUser = this.usersDataSource.data.indexOf(user);
+        this.usersDataSource.data.splice(indexOfUser, 1, result);
+
+        // TODO reassigning the table source is a bad and temporary
+        this.usersDataSource.data = _.clone(this.usersDataSource.data);
         this.snackBar.open('Successfully edited the user');
       }
     });
   }
 
   deleteUser(userGridModel: UserModel): void {
-    const indexOfUser = this.usersDataSource.data.indexOf(userGridModel);
-    this.usersDataSource.data.splice(indexOfUser, 1);
-    this.table.renderRows();
-    this.changeDetectorRef.detectChanges();
+    // TODO reassigning the table source is a bad and temporary
+    this.usersDataSource.data = this.usersDataSource.data.filter(u => u.id !== userGridModel.id);
     this.snackBar.open('Successfully deleted the user');
   }
 
@@ -79,20 +81,9 @@ export class UsersGridComponent implements AfterViewInit {
 
   getFilterPredicate(): (row: UserModel, filter: string) => boolean {
     return (row: UserModel, filter: string) => {
-      // split string per '$' to array
-      const matchFilter = [];
-
-      // Fetch data from row
-      const customFilterDD = row.firstName.toLowerCase().includes(filter) ||
+      return row.firstName.toLowerCase().includes(filter) ||
         row.lastName.toLowerCase().includes(filter) ||
         row.email.toLowerCase().includes(filter);
-
-      // push boolean values into array
-      matchFilter.push(customFilterDD);
-
-      // return true if all values in array is true
-      // else return false
-      return matchFilter.every(Boolean);
     };
   }
 }
