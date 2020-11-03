@@ -16,6 +16,10 @@
     #users-grid-content_toolbar {
       display: flex;
       justify-content: space-between;
+
+      #search-input {
+        flex: 0 0 250px;
+      }
     }
 
     table {
@@ -55,6 +59,10 @@
     .mat-column-actions {
       flex: 0 0 15% !important;
       width: 15% !important;
+    }
+
+    .hide {
+      display: none;
     }
   }
 }

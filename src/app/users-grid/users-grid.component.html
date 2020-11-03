@@ -3,11 +3,12 @@
   <mat-toolbar id="users-grid-content_toolbar" color="primary">
     <h2>Manage <b>Users</b></h2>
 
-    <mat-form-field>
-      <mat-label>Search</mat-label>
-      <input matInput [(ngModel)]="searchValue" (ngModelChange)="applyFilter($event)">
-      <button mat-button *ngIf="searchValue" matSuffix mat-icon-button aria-label="Clear"
-              (click)="searchValue=''; applyFilter('')">
+    <mat-form-field floatLabel="never" id="search-input">
+      <input matInput placeholder="Search" [(ngModel)]="searchPhrase" autocomplete="off"
+             (keyup)="applyFilter()">
+
+      <button mat-button *ngIf="searchPhrase" matSuffix mat-icon-button aria-label="Clear"
+              (click)="onSearchClear()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
@@ -56,12 +57,28 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef colspan="4">
+        Loading data...
+      </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="noData">
+      <mat-footer-cell *matFooterCellDef colspan="4">
+        No data.
+      </mat-footer-cell>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':usersDataSource!=null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']"
+                    [ngClass]="{'hide':!(usersDataSource!=null && usersDataSource.data.length==0)}"></mat-footer-row>
+
   </table>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                 showFirstLastButtons></mat-paginator>
 
 </mat-card>
 

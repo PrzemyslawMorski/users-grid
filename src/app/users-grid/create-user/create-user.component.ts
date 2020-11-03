@@ -1,50 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserModel } from '../../models/user';
+import { UsersService } from '../../services/users.service';
+import { NotificationsService } from '../../services/notifications.service';
 
 @Component({
   selector: 'app-create-user',
   templateUrl: './create-user.component.html',
   styleUrls: ['./create-user.component.scss']
 })
-export class CreateUserComponent implements OnInit {
+export class CreateUserComponent {
 
-  form: FormGroup;
+  form: FormGroup = new FormGroup({
+    firstName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(128)
+    ]),
+    lastName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(128)
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email
+    ])
+  });
 
-  firstNameControl = new FormControl('', [
-    Validators.required,
-    Validators.maxLength(128)
-  ]);
-
-  lastNameControl = new FormControl('', [
-    Validators.required,
-    Validators.maxLength(128)
-  ]);
-
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
-
-  constructor(formBuilder: FormBuilder, public dialogRef: MatDialogRef<CreateUserComponent>) {
-    this.form = formBuilder.group({
-      firstName: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(128)
-      ]),
-      lastName: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(128)
-      ]),
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email
-      ])
-    });
-  }
-
-  ngOnInit(): void {
+  constructor(private readonly dialogRef: MatDialogRef<CreateUserComponent>,
+              private readonly userService: UsersService,
+              private readonly notificationsService: NotificationsService) {
   }
 
   onSubmit(): void {
@@ -53,13 +38,15 @@ export class CreateUserComponent implements OnInit {
     }
 
     const user: UserModel = {
-      id: undefined,
+      $key: null,
       firstName: this.form.controls.firstName.value,
       lastName: this.form.controls.lastName.value,
       email: this.form.controls.email.value,
     };
 
+    this.userService.createUser(user);
     this.dialogRef.close(user);
+    this.notificationsService.success('Successfully created the user');
   }
 
 }

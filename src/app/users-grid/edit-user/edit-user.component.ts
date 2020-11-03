@@ -1,7 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserModel } from '../../models/user';
+import { UsersService } from '../../services/users.service';
+import { NotificationsService } from '../../services/notifications.service';
 
 @Component({
   selector: 'app-edit-user',
@@ -10,41 +12,49 @@ import { UserModel } from '../../models/user';
 })
 export class EditUserComponent {
 
-  form: FormGroup;
+  form: FormGroup = new FormGroup({
+    firstName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(128)
+    ]),
+    lastName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(128)
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email
+    ])
+  });
 
-  constructor(formBuilder: FormBuilder,
-              public dialogRef: MatDialogRef<EditUserComponent>,
+  constructor(private readonly dialogRef: MatDialogRef<EditUserComponent>,
+              private readonly userService: UsersService,
+              private readonly notificationsService: NotificationsService,
               @Inject(MAT_DIALOG_DATA) public data: UserModel) {
-
-    this.form = formBuilder.group({
-      firstName: new FormControl(data?.firstName, [
-        Validators.required,
-        Validators.maxLength(128)
-      ]),
-      lastName: new FormControl(data?.lastName, [
-        Validators.required,
-        Validators.maxLength(128)
-      ]),
-      email: new FormControl(data?.email, [
-        Validators.required,
-        Validators.email
-      ])
-    });
+    if (data) {
+      this.form.setValue({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email
+      });
+    }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (!this.form.valid) {
       return;
     }
 
     const user: UserModel = {
-      id: this.data.id,
+      $key: this.data.$key,
       firstName: this.form.controls.firstName.value,
       lastName: this.form.controls.lastName.value,
       email: this.form.controls.email.value,
     };
 
+    await this.userService.updateUser(user);
     this.dialogRef.close(user);
+    this.notificationsService.success('Successfully updated the user');
   }
 
 }
