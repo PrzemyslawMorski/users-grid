@@ -4,7 +4,6 @@ import { EditUserComponent } from './edit-user/edit-user.component';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -45,7 +44,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatInputModule,
     MatFormFieldModule,
 
-    HttpClientModule,
     ReactiveFormsModule
   ]
 })

@@ -5,9 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { UsersGridModule } from './users-grid/users-grid.module';
-import { environment } from '../environments/environment';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
-import { AngularFireModule } from '@angular/fire';
+import { FirebaseModule } from './firebase.module';
 
 @NgModule({
   declarations: [
@@ -19,8 +17,7 @@ import { AngularFireModule } from '@angular/fire';
     BrowserModule,
     BrowserAnimationsModule,
 
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireDatabaseModule,
+    FirebaseModule,
 
     UsersGridModule
   ],
