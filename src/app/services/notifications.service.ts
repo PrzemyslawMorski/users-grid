@@ -11,14 +11,12 @@ export class NotificationsService {
 
   config: MatSnackBarConfig = {
     duration: 3000,
-    horizontalPosition: 'right',
-    verticalPosition: 'top',
-    panelClass: ['notification']
+    horizontalPosition: 'center',
+    verticalPosition: 'top'
   };
 
 
   success(msg): void {
-    this.config.panelClass = ['notification', 'success'];
     this.snackBar.open(msg, '', this.config);
   }
 }

@@ -18,7 +18,7 @@ export class UsersGridComponent implements OnInit {
 
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'actions'];
 
-  usersDataSource = new MatTableDataSource<UserModel>();
+  usersDataSource: MatTableDataSource<UserModel>;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
