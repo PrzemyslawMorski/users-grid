@@ -31,7 +31,7 @@ export class UsersGridComponent implements OnInit {
 
   ngOnInit(): void {
     this.usersService.getUsers().subscribe(users => {
-      this.usersDataSource.data = users;
+      this.usersDataSource = new MatTableDataSource<UserModel>(users);
       this.usersDataSource.paginator = this.paginator;
       this.usersDataSource.sort = this.sort;
       this.usersDataSource.filterPredicate = (data, filter) => {
@@ -39,6 +39,7 @@ export class UsersGridComponent implements OnInit {
           return column !== 'actions' && data[column].toLowerCase().includes(filter);
         });
       };
+      this.applyFilter();
     });
   }
 
